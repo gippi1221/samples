@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Top jokes!</h2>
+    <h3>Last refresh date and time is {{ last_dt }}</h3>
+
+    <br />
+
+    {% for joke in jokes %}
+      <div style="padding: 10px; background-color: #EEE; margin: 20px">
+        <div style="display: flex; justify-content: space-between;">
+          <div>Type: {{ joke['type'] }}</div>
+          <div>Rating: {{ joke['rating'] }}</div>
+        </div>
+        
+        <p style="font-size: 24px">- {{ joke['setup'] }}</p>
+        <p style="font-size: 24px">- {{ joke['punchline'] }}</p>
+      </div>
+    {% endfor %}
+
+{% endblock %}
