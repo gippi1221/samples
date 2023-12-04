@@ -1,7 +1,7 @@
 
 ## The system design
 
-![alt text](./Services.svg)
+![alt text](./Services.png)
 
 ### Producer:
 Requests a new joke from some api service and pushes data to kafka cluster. it can be scheduled by any tools to perform this action from time to time - cron job, airflow etc..
