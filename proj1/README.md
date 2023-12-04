@@ -35,3 +35,7 @@ is used as a lightweight way to present data to end user. it queries data from t
 docker-compose build
 docker-compose up -d
 ```
+
+## Sample output
+
+![alt text](./output.png)
