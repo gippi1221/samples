@@ -15,6 +15,11 @@ services:
       - "9093:9093"
     env_file:
       - ./.env
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--list", "--zookeeper", "zookeeper:2181"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   mongodb:
     image: mongo:7.0.2
@@ -42,8 +47,8 @@ services:
     container_name: proj1-consumer
     image: proj1/consumer
     depends_on:
-      - mongodb
-      - kafka
+      kafka:
+        condition: service_healthy
     env_file:
       - ./.env
 

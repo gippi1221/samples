@@ -1,32 +1,28 @@
-1) launch docker-compose up -d
-2) create a topic
-docker-compose exec kafka kafka-topics.sh --create --topic topic_1 --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092
-3) validate
-docker-compose exec kafka kafka-console-consumer.sh --topic topic_1 --from-beginning --bootstrap-server kafka:9092
-docker-compose exec kafka kafka-console-producer.sh --topic topic_1 --broker-list kafka:9092
 
-4) python3 -m venv venv
-5) source venv/bin/activate
-
-
+### Producer:
+Requests a new joke from some api service and pushes data to kafka cluster. it can be scheduled by any tools to perform this action from time to time - cron job, airflow etc..
+```
 docker-compose run producer python ./producer.py
+```
+
+### Kafka cluster:
+Only one broker and one zookeeper are in this setup. the wurstmeister images are used.
+
+### Consumer:
+It pulls the new jokes from the kafka and stores data in the MongoDB. it also generates some rating for further ranging.
+
+### MongoDB:
+Document DB to store joke objects.
+
+### Warmer:
+The service is to update redis cache with top jkes by rating. it pulls the data from MongoDB, calculates the top-10 and refreshes data in Redis for further quering from the web. it can be scheduled by any tools to perform this action with the required interval.
+```
 docker-compose run warmer python ./warmer.py
+```
 
-zadd top 6 test1
-zadd top 2 test2
-zadd top 2 test3
-zadd top 3 test4
-zadd top 9 test5
-zadd top 7 test6
-zadd top 3 test7
-zadd top 4 test8
-zadd top 2 test9
-zadd top 1 test10
+### Redis:
+It stores Sorted Set for Top-10 jokes by rating and Hashes for objects.
 
-ZRANGE top 0 -1 REV
+### Flask:
+is used as a lightweight way to present data to end user. it queries data from the redis and show it by request.
 
-
-ZREMRANGEBYRANK top 0 -6
-
-
-db.jokes.aggregate([{$sort: {rating: -1}}, {$limit: 5}])
